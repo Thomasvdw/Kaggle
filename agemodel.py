@@ -8,7 +8,7 @@ Created on Tue May 19 13:29:23 2015
 import csv
 import numpy as np
 
-csv_file_object = csv.reader(open('train.csv', 'rb'))
+csv_file_object = csv.reader(open('C:\Users\Thomas\Documents\GitHub\Kaggle\train.csv', 'rb'))
 header = csv_file_object.next()
 
 # Import data in 'data' as numpy array
@@ -39,10 +39,19 @@ abovemean_onboard = data[above_mean,1].astype(np.float)
 undermean_onboard = data[under_mean,1].astype(np.float)
 
 # Find out survival percentage men/women
-proportion_under_mean_survived = np.sum(women_onboard) / np.size(women_onboard)  
-proportion_men_survived = np.sum(men_onboard) / np.size(men_onboard) 
+proportion_above_mean_survived = np.sum(abovemean_onboard) / np.size(abovemean_onboard)
+proportion_under_mean_survived = np.sum(undermean_onboard) / np.size(undermean_onboard) 
 
-def save_prediction():
+test_file = open('test.csv', 'rb')
+test_file_object = csv.reader(test_file)
+test_file_object.next()
+
+for row in test_file_object:
+    print float(row[4])
+    #if int(row[4]) < mean:
+        #print 'hoi'
+
+def save_prediction(mean):
     test_file = open('test.csv', 'rb')
     test_file_object = csv.reader(test_file)
     test_file_object.next()
@@ -53,11 +62,11 @@ def save_prediction():
 
     prediction_file_object.writerow(["PassengerId", "Survived"])
     for row in test_file_object:       # For each row in test.csv
-        if row[3] == 'female':         # is it a female, if yes then                                       
+        if row[5] < mean:         # is it a female, if yes then                                       
             prediction_file_object.writerow([row[0],'1'])    # predict 1
         else:                              # or else if male,       
             prediction_file_object.writerow([row[0],'0'])    # predict 0
         test_file.close()
         prediction_file.close()
 
-#save_prediction()
+#save_prediction(mean)
